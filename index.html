@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Dodge - Arcade Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="game-container">
+        <h1>🚗 Car Dodge</h1>
+        <p class="subtitle">Avoid the traffic and beat your high score!</p>
+
+        <div class="score-board">
+            <div>Score: <span id="score">0</span></div>
+            <div>Best: <span id="best">0</span></div>
+        </div>
+
+        <div class="game-area">
+            <canvas id="gameCanvas" width="360" height="540"></canvas>
+
+            <div id="overlay" class="overlay">
+                <h2 id="message">Ready to Drive?</h2>
+                <p id="instructions">Use ← → or A / D to move.</p>
+                <button id="startButton">Start Game</button>
+            </div>
+        </div>
+
+        <p class="controls">Keyboard: ← → or A / D</p>
+        <p class="mobile-hint">On a phone? Use the buttons below.</p>
+
+        <div class="mobile-controls">
+            <button id="leftButton" aria-label="Move left">◀ Left</button>
+            <button id="rightButton" aria-label="Move right">Right ▶</button>
+        </div>
+    </main>
+
+    <script src="game.js"></script>
+</body>
+</html>
