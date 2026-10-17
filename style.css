@@ -59,10 +59,11 @@ h1{
     background: #374151;
 }
 
-canvas {
+#gameCanvas {
     display: block;
     width: 100%;
     height: auto;
+    background: #374151;
 }
 
 .overlay {
@@ -73,7 +74,9 @@ canvas {
     align-items: center;
     justify-content: center;
     padding: 20px;
+    text-align: center;
     background: rgb(15 23 42 / 85%);
+    color: white;
 }
 
 .overlay h2 {
