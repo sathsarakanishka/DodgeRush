@@ -9,7 +9,14 @@ const message = document.getElementById("message");
 const instructions = document.getElementById("instructions");
 const startButton = document.getElementById("startButton");
 
-// Load the images
+// Banana challenge elements
+const bananaChallenge = document.getElementById("bananaChallenge");
+const bananaQuestion = document.getElementById("bananaQuestion");
+const bananaAnswer = document.getElementById("bananaAnswer");
+const submitBanana = document.getElementById("submitBanana");
+const bananaMessage = document.getElementById("bananaMessage");
+
+// Load road and car images
 const roadImage = new Image();
 roadImage.src = "assets/road.png";
 
@@ -23,6 +30,8 @@ enemyCarImage.src = "assets/enemy-car.png";
 const lanePositions = [40, 160, 280];
 
 let isRunning = false;
+let isChallenging = false;
+
 let carLane = 1;
 let carPositionX = lanePositions[carLane];
 
@@ -35,22 +44,29 @@ let score = 0;
 let frame = 0;
 let animationId = null;
 
-// Load the saved best score
+// Banana API variables
+let bananaSolution = null;
+const bonusPoints = 50;
+
+// Best score
 let bestScore = Number(localStorage.getItem("carDodgeBest")) || 0;
 bestText.textContent = bestScore;
 
 
-// Check that all images have loaded
+// Check whether all images have loaded
 function imagesReady() {
     return (
-        roadImage.complete && roadImage.naturalWidth > 0 &&
-        playerCarImage.complete && playerCarImage.naturalWidth > 0 &&
-        enemyCarImage.complete && enemyCarImage.naturalWidth > 0
+        roadImage.complete &&
+        roadImage.naturalWidth > 0 &&
+        playerCarImage.complete &&
+        playerCarImage.naturalWidth > 0 &&
+        enemyCarImage.complete &&
+        enemyCarImage.naturalWidth > 0
     );
 }
 
 
-// Draw the road image
+// Draw road image
 function drawRoad() {
     ctx.drawImage(
         roadImage,
@@ -62,7 +78,7 @@ function drawRoad() {
 }
 
 
-// Draw the player's car image
+// Draw player car image
 function drawCar() {
     ctx.drawImage(
         playerCarImage,
@@ -74,7 +90,7 @@ function drawCar() {
 }
 
 
-// Create an obstacle in a random lane
+// Create enemy car in a random lane
 function createObstacle() {
     const lane = Math.floor(Math.random() * 3);
 
@@ -87,7 +103,7 @@ function createObstacle() {
 }
 
 
-// Draw enemy car images
+// Draw enemy cars
 function drawObstacles() {
     for (const obstacle of obstacles) {
         ctx.drawImage(
@@ -101,7 +117,7 @@ function drawObstacles() {
 }
 
 
-// Check if two cars collide
+// Check collision between cars
 function checkCollision(car, obstacle) {
     return (
         car.x < obstacle.x + obstacle.width &&
@@ -112,7 +128,7 @@ function checkCollision(car, obstacle) {
 }
 
 
-// Draw the complete game
+// Draw complete game
 function drawGame() {
     if (!imagesReady()) return;
 
@@ -122,34 +138,146 @@ function drawGame() {
 }
 
 
-// Update the game
+// Load a puzzle from Banana API
+async function loadBananaChallenge() {
+    isRunning = false;
+    isChallenging = true;
+
+    bananaChallenge.style.display = "flex";
+    bananaQuestion.style.display = "none";
+
+    bananaAnswer.value = "";
+    bananaMessage.textContent = "Loading puzzle...";
+
+    submitBanana.disabled = true;
+    bananaSolution = null;
+
+    try {
+        const response = await fetch(
+            "https://marcconrad.com/uob/banana/api.php?out=json"
+        );
+
+        if (!response.ok) {
+            throw new Error("Banana API request failed");
+        }
+
+        const data = await response.json();
+
+        if (!data.question || data.solution === undefined) {
+            throw new Error("Invalid API response");
+        }
+
+        bananaSolution = Number(data.solution);
+
+        bananaQuestion.onload = function() {
+            bananaQuestion.style.display = "block";
+        };
+
+        bananaQuestion.onerror = function() {
+            bananaMessage.textContent = "Could not load puzzle image.";
+            submitBanana.disabled = true;
+            bananaSolution = null;
+        };
+
+        bananaQuestion.src = data.question;
+
+        bananaMessage.textContent = "Solve the puzzle to continue!";
+        submitBanana.disabled = false;
+
+    } catch (error) {
+        console.error("Banana API error:", error);
+
+        bananaMessage.textContent =
+            "Could not load the puzzle. Try again.";
+
+        bananaSolution = null;
+        submitBanana.disabled = true;
+    }
+}
+
+
+// Check Banana puzzle answer
+function checkBananaAnswer() {
+    if (!isChallenging || bananaSolution === null) {
+        return;
+    }
+
+    const answer = bananaAnswer.value.trim();
+
+    if (answer === "") {
+        bananaMessage.textContent = "Please enter your answer.";
+        return;
+    }
+
+    submitBanana.disabled = true;
+
+    if (Number(answer) === bananaSolution) {
+
+        // Correct answer
+        score += bonusPoints;
+        scoreText.textContent = score;
+
+        bananaMessage.textContent =
+            "Correct! +" + bonusPoints + " bonus points!";
+
+        bananaSolution = null;
+
+        setTimeout(function() {
+            bananaChallenge.style.display = "none";
+
+            isChallenging = false;
+            isRunning = true;
+
+            drawGame();
+
+            animationId = requestAnimationFrame(updateGame);
+
+        }, 1200);
+
+    } else {
+
+        // Incorrect answer
+        bananaMessage.textContent = "Wrong answer! Game Over!";
+
+        bananaSolution = null;
+
+        setTimeout(function() {
+            bananaChallenge.style.display = "none";
+            endGame();
+
+        }, 1200);
+    }
+}
+
+
+// Update game
 function updateGame() {
     if (!isRunning) return;
 
     frame++;
 
-    // Create an enemy every 60 frames
+    // Create enemy every 60 frames
     if (frame % 60 === 0) {
         createObstacle();
     }
 
-    // Move enemies down
+    // Move enemy cars
     for (const obstacle of obstacles) {
         obstacle.y += 4;
     }
 
-    // Remove enemies that leave the screen
+    // Remove enemies outside canvas
     obstacles = obstacles.filter(
         obstacle => obstacle.y < canvas.height
     );
 
-    // Increase score
+    // Increase normal score
     if (frame % 10 === 0) {
         score++;
         scoreText.textContent = score;
     }
 
-    // Player's collision area
+    // Player collision area
     const player = {
         x: carPositionX,
         y: carPositionY,
@@ -157,10 +285,15 @@ function updateGame() {
         height: carHeight
     };
 
-    // Check collisions
+    // Check for collisions
     for (const obstacle of obstacles) {
         if (checkCollision(player, obstacle)) {
-            endGame();
+
+            // Pause game and open Banana challenge
+            cancelAnimationFrame(animationId);
+            animationId = null;
+
+            loadBananaChallenge();
             return;
         }
     }
@@ -171,15 +304,21 @@ function updateGame() {
 }
 
 
-// Move the player between the three lanes
+// Move player between three lanes
 function moveCar(direction) {
     if (!isRunning) return;
 
     carLane += direction;
 
-    // Stay within the three lanes
-    if (carLane < 0) carLane = 0;
-    if (carLane > 2) carLane = 2;
+    // First lane boundary
+    if (carLane < 0) {
+        carLane = 0;
+    }
+
+    // Third lane boundary
+    if (carLane > 2) {
+        carLane = 2;
+    }
 
     carPositionX = lanePositions[carLane];
 
@@ -187,12 +326,12 @@ function moveCar(direction) {
 }
 
 
-// Start or restart the game
+// Start or restart game
 function startGame() {
     if (!imagesReady()) {
         message.textContent = "Loading images...";
         instructions.textContent =
-            "Check that all three images exist in the assets folder.";
+            "Please check your assets folder.";
         overlay.style.display = "flex";
         return;
     }
@@ -202,17 +341,24 @@ function startGame() {
         animationId = null;
     }
 
+    bananaChallenge.style.display = "none";
+    bananaSolution = null;
+
+    isChallenging = false;
+    isRunning = true;
+
     carLane = 1;
     carPositionX = lanePositions[carLane];
 
     obstacles = [];
     score = 0;
     frame = 0;
-    isRunning = true;
 
     scoreText.textContent = score;
+
     message.textContent = "Game Started!";
     instructions.textContent = "Use ← → or A / D to move.";
+
     startButton.textContent = "Play Again";
     overlay.style.display = "none";
 
@@ -222,23 +368,27 @@ function startGame() {
 }
 
 
-// End the game
+// End game
 function endGame() {
     isRunning = false;
+    isChallenging = false;
 
     if (animationId !== null) {
         cancelAnimationFrame(animationId);
         animationId = null;
     }
 
+    // Save best score
     if (score > bestScore) {
         bestScore = score;
+
         localStorage.setItem("carDodgeBest", bestScore);
         bestText.textContent = bestScore;
     }
 
     message.textContent = "Game Over!";
-    instructions.textContent = "Your score: " + score;
+    instructions.textContent = "Your final score: " + score;
+
     startButton.textContent = "Play Again";
     overlay.style.display = "flex";
 }
@@ -253,6 +403,7 @@ document.addEventListener("keydown", function(event) {
     if (key === "arrowleft" || key === "a") {
         event.preventDefault();
         moveCar(-1);
+
     } else if (key === "arrowright" || key === "d") {
         event.preventDefault();
         moveCar(1);
@@ -260,34 +411,46 @@ document.addEventListener("keydown", function(event) {
 });
 
 
-// Mobile controls
+// Mobile left button
 document.getElementById("leftButton").addEventListener("click", function() {
     moveCar(-1);
 });
 
+
+// Mobile right button
 document.getElementById("rightButton").addEventListener("click", function() {
     moveCar(1);
 });
+
+
+// Submit Banana answer
+submitBanana.addEventListener("click", checkBananaAnswer);
 
 
 // Start button
 startButton.addEventListener("click", startGame);
 
 
+// Allow Enter key to submit Banana answer
+bananaAnswer.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        checkBananaAnswer();
+    }
+});
+
+
 // Handle image loading errors
 function handleImageError() {
     message.textContent = "Image could not be loaded";
+
     instructions.textContent =
-        "Check assets/road.png, assets/player-car.png and assets/enemy-car.png.";
+        "Check road.png, player-car.png and enemy-car.png in assets.";
+
     overlay.style.display = "flex";
 }
 
-roadImage.onerror = handleImageError;
-playerCarImage.onerror = handleImageError;
-enemyCarImage.onerror = handleImageError;
 
-
-// Draw the initial screen when all images are ready
+// Initial image loading
 let loadedImages = 0;
 
 function handleImageLoad() {
@@ -301,3 +464,7 @@ function handleImageLoad() {
 roadImage.onload = handleImageLoad;
 playerCarImage.onload = handleImageLoad;
 enemyCarImage.onload = handleImageLoad;
+
+roadImage.onerror = handleImageError;
+playerCarImage.onerror = handleImageError;
+enemyCarImage.onerror = handleImageError;
