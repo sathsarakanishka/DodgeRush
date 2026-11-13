@@ -2,21 +2,22 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+// Get elements from the HTML page
 const scoreText = document.getElementById("score");
 const bestText = document.getElementById("best");
+
 const overlay = document.getElementById("overlay");
 const message = document.getElementById("message");
 const instructions = document.getElementById("instructions");
 const startButton = document.getElementById("startButton");
 
-// Banana challenge elements
 const bananaChallenge = document.getElementById("bananaChallenge");
 const bananaQuestion = document.getElementById("bananaQuestion");
 const bananaAnswer = document.getElementById("bananaAnswer");
 const submitBanana = document.getElementById("submitBanana");
 const bananaMessage = document.getElementById("bananaMessage");
 
-// Load road and car images
+// Load game images
 const roadImage = new Image();
 roadImage.src = "assets/road.png";
 
@@ -26,9 +27,10 @@ playerCarImage.src = "assets/player-car.png";
 const enemyCarImage = new Image();
 enemyCarImage.src = "assets/enemy-car.png";
 
-// Three lane positions
+// X positions of the three driving lanes
 const lanePositions = [40, 160, 280];
 
+// Game status variables
 let isRunning = false;
 let isChallenging = false;
 
@@ -39,21 +41,22 @@ const carPositionY = 420;
 const carWidth = 40;
 const carHeight = 70;
 
+// Score and obstacle variables
 let obstacles = [];
 let score = 0;
 let frame = 0;
 let animationId = null;
 
-// Banana API variables
+// Banana challenge variables
 let bananaSolution = null;
 const bonusPoints = 50;
+let bonusLevelUsed = false;
 
-// Best score
+// Get the saved best score from local storage
 let bestScore = Number(localStorage.getItem("carDodgeBest")) || 0;
 bestText.textContent = bestScore;
 
-
-// Check whether all images have loaded
+// Check whether all game images have loaded
 function imagesReady() {
     return (
         roadImage.complete &&
@@ -65,8 +68,7 @@ function imagesReady() {
     );
 }
 
-
-// Draw road image
+// Draw the road background
 function drawRoad() {
     ctx.drawImage(
         roadImage,
@@ -77,8 +79,7 @@ function drawRoad() {
     );
 }
 
-
-// Draw player car image
+// Draw the player's car
 function drawCar() {
     ctx.drawImage(
         playerCarImage,
@@ -89,8 +90,7 @@ function drawCar() {
     );
 }
 
-
-// Create enemy car in a random lane
+// Create a new obstacle in a random lane
 function createObstacle() {
     const lane = Math.floor(Math.random() * 3);
 
@@ -102,8 +102,7 @@ function createObstacle() {
     });
 }
 
-
-// Draw enemy cars
+// Draw all enemy cars
 function drawObstacles() {
     for (const obstacle of obstacles) {
         ctx.drawImage(
@@ -116,8 +115,7 @@ function drawObstacles() {
     }
 }
 
-
-// Check collision between cars
+// Check whether the player's car hits an obstacle
 function checkCollision(car, obstacle) {
     return (
         car.x < obstacle.x + obstacle.width &&
@@ -127,8 +125,7 @@ function checkCollision(car, obstacle) {
     );
 }
 
-
-// Draw complete game
+// Draw all game objects on the canvas
 function drawGame() {
     if (!imagesReady()) return;
 
@@ -137,8 +134,7 @@ function drawGame() {
     drawCar();
 }
 
-
-// Load a puzzle from Banana API
+// Get a new math puzzle from the Banana API
 async function loadBananaChallenge() {
     isRunning = false;
     isChallenging = true;
@@ -163,40 +159,50 @@ async function loadBananaChallenge() {
 
         const data = await response.json();
 
+        // Check whether the API returned a valid puzzle
         if (!data.question || data.solution === undefined) {
             throw new Error("Invalid API response");
         }
 
-        bananaSolution = Number(data.solution);
+        const solution = Number(data.solution);
 
+        if (!Number.isFinite(solution)) {
+            throw new Error("Invalid puzzle solution");
+        }
+
+        // Display the puzzle image
         bananaQuestion.onload = function() {
             bananaQuestion.style.display = "block";
         };
 
         bananaQuestion.onerror = function() {
-            bananaMessage.textContent = "Could not load puzzle image.";
+            bananaMessage.textContent =
+                "Could not load puzzle image. Try again.";
+
             submitBanana.disabled = true;
             bananaSolution = null;
         };
 
         bananaQuestion.src = data.question;
+        bananaSolution = solution;
 
-        bananaMessage.textContent = "Solve the puzzle to continue!";
+        bananaMessage.textContent =
+            "Solve the puzzle to continue!";
+
         submitBanana.disabled = false;
 
     } catch (error) {
         console.error("Banana API error:", error);
 
         bananaMessage.textContent =
-            "Could not load the puzzle. Try again.";
+            "Could not load the puzzle. Please try again.";
 
         bananaSolution = null;
         submitBanana.disabled = true;
     }
 }
 
-
-// Check Banana puzzle answer
+// Check the answer entered by the player
 function checkBananaAnswer() {
     if (!isChallenging || bananaSolution === null) {
         return;
@@ -211,9 +217,8 @@ function checkBananaAnswer() {
 
     submitBanana.disabled = true;
 
+    // Award bonus points for a correct answer
     if (Number(answer) === bananaSolution) {
-
-        // Correct answer
         score += bonusPoints;
         scoreText.textContent = score;
 
@@ -222,6 +227,7 @@ function checkBananaAnswer() {
 
         bananaSolution = null;
 
+        // Continue the game after a short delay
         setTimeout(function() {
             bananaChallenge.style.display = "none";
 
@@ -231,12 +237,10 @@ function checkBananaAnswer() {
             drawGame();
 
             animationId = requestAnimationFrame(updateGame);
-
         }, 1200);
 
     } else {
-
-        // Incorrect answer
+        // End the game if the answer is incorrect
         bananaMessage.textContent = "Wrong answer! Game Over!";
 
         bananaSolution = null;
@@ -244,40 +248,38 @@ function checkBananaAnswer() {
         setTimeout(function() {
             bananaChallenge.style.display = "none";
             endGame();
-
         }, 1200);
     }
 }
 
-
-// Update game
+// Main game loop
 function updateGame() {
     if (!isRunning) return;
 
     frame++;
 
-    // Create enemy every 60 frames
+    // Create a new obstacle every 60 frames
     if (frame % 60 === 0) {
         createObstacle();
     }
 
-    // Move enemy cars
+    // Move obstacles down the road
     for (const obstacle of obstacles) {
         obstacle.y += 4;
     }
 
-    // Remove enemies outside canvas
+    // Remove obstacles that have left the screen
     obstacles = obstacles.filter(
         obstacle => obstacle.y < canvas.height
     );
 
-    // Increase normal score
+    // Increase the score as the player survives
     if (frame % 10 === 0) {
         score++;
         scoreText.textContent = score;
     }
 
-    // Player collision area
+    // Get the player's current position
     const player = {
         x: carPositionX,
         y: carPositionY,
@@ -285,37 +287,41 @@ function updateGame() {
         height: carHeight
     };
 
-    // Check for collisions
+    // Check for collisions with enemy cars
     for (const obstacle of obstacles) {
         if (checkCollision(player, obstacle)) {
-
-            // Pause game and open Banana challenge
             cancelAnimationFrame(animationId);
             animationId = null;
 
-            loadBananaChallenge();
+            // Show the bonus level only once per game
+            if (!bonusLevelUsed) {
+                bonusLevelUsed = true;
+                loadBananaChallenge();
+            } else {
+                endGame();
+            }
+
             return;
         }
     }
 
+    // Redraw the game and continue the loop
     drawGame();
 
     animationId = requestAnimationFrame(updateGame);
 }
 
-
-// Move player between three lanes
+// Move the player's car between lanes
 function moveCar(direction) {
     if (!isRunning) return;
 
     carLane += direction;
 
-    // First lane boundary
+    // Keep the car inside the road
     if (carLane < 0) {
         carLane = 0;
     }
 
-    // Third lane boundary
     if (carLane > 2) {
         carLane = 2;
     }
@@ -325,28 +331,34 @@ function moveCar(direction) {
     drawGame();
 }
 
-
-// Start or restart game
+// Start a new game
 function startGame() {
     if (!imagesReady()) {
         message.textContent = "Loading images...";
         instructions.textContent =
             "Please check your assets folder.";
+
         overlay.style.display = "flex";
         return;
     }
 
+    // Stop any previous animation
     if (animationId !== null) {
         cancelAnimationFrame(animationId);
         animationId = null;
     }
 
+    // Reset the Banana challenge
     bananaChallenge.style.display = "none";
-    bananaSolution = null;
+    bananaQuestion.src = "";
 
+    bananaSolution = null;
     isChallenging = false;
     isRunning = true;
 
+    bonusLevelUsed = false;
+
+    // Reset the player's position and score
     carLane = 1;
     carPositionX = lanePositions[carLane];
 
@@ -356,19 +368,21 @@ function startGame() {
 
     scoreText.textContent = score;
 
+    // Update the starting screen
     message.textContent = "Game Started!";
-    instructions.textContent = "Use ← → or A / D to move.";
+    instructions.textContent =
+        "Use ← → or A / D to move.";
 
     startButton.textContent = "Play Again";
     overlay.style.display = "none";
 
     drawGame();
 
+    // Start the game loop
     animationId = requestAnimationFrame(updateGame);
 }
 
-
-// End game
+// End the game and save the best score
 function endGame() {
     isRunning = false;
     isChallenging = false;
@@ -378,23 +392,24 @@ function endGame() {
         animationId = null;
     }
 
-    // Save best score
+    // Update the best score if the current score is higher
     if (score > bestScore) {
         bestScore = score;
 
-        localStorage.setItem("carDodgeBest", bestScore);
+        localStorage.setItem("carDodgeBest", score);
         bestText.textContent = bestScore;
     }
 
+    // Display the Game Over screen
     message.textContent = "Game Over!";
-    instructions.textContent = "Your final score: " + score;
+    instructions.textContent =
+        "Your final score: " + score;
 
     startButton.textContent = "Play Again";
     overlay.style.display = "flex";
 }
 
-
-// Keyboard controls
+// Handle keyboard controls
 document.addEventListener("keydown", function(event) {
     if (!isRunning) return;
 
@@ -410,47 +425,34 @@ document.addEventListener("keydown", function(event) {
     }
 });
 
+// Handle mobile left and right buttons
+document.getElementById("leftButton")
+    .addEventListener("click", function() {
+        moveCar(-1);
+    });
 
-// Mobile left button
-document.getElementById("leftButton").addEventListener("click", function() {
-    moveCar(-1);
-});
+document.getElementById("rightButton")
+    .addEventListener("click", function() {
+        moveCar(1);
+    });
 
+// Handle Banana challenge submission
+submitBanana.addEventListener(
+    "click",
+    checkBananaAnswer
+);
 
-// Mobile right button
-document.getElementById("rightButton").addEventListener("click", function() {
-    moveCar(1);
-});
-
-
-// Submit Banana answer
-submitBanana.addEventListener("click", checkBananaAnswer);
-
-
-// Start button
-startButton.addEventListener("click", startGame);
-
-
-// Allow Enter key to submit Banana answer
+// Allow the player to submit an answer using Enter
 bananaAnswer.addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
         checkBananaAnswer();
     }
 });
 
+// Start the game when the start button is clicked
+startButton.addEventListener("click", startGame);
 
-// Handle image loading errors
-function handleImageError() {
-    message.textContent = "Image could not be loaded";
-
-    instructions.textContent =
-        "Check road.png, player-car.png and enemy-car.png in assets.";
-
-    overlay.style.display = "flex";
-}
-
-
-// Initial image loading
+// Count successfully loaded images
 let loadedImages = 0;
 
 function handleImageLoad() {
@@ -461,6 +463,17 @@ function handleImageLoad() {
     }
 }
 
+// Display an error if a game image cannot load
+function handleImageError() {
+    message.textContent = "Image could not be loaded";
+
+    instructions.textContent =
+        "Check road.png, player-car.png and enemy-car.png in assets.";
+
+    overlay.style.display = "flex";
+}
+
+// Register image loading and error events
 roadImage.onload = handleImageLoad;
 playerCarImage.onload = handleImageLoad;
 enemyCarImage.onload = handleImageLoad;
