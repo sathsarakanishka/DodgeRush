@@ -11,9 +11,6 @@ const message = document.getElementById("message");
 const instructions = document.getElementById("instructions");
 const startButton = document.getElementById("startButton");
 
-<<<<<<< Updated upstream
-// Load the images
-=======
 const bananaChallenge = document.getElementById("bananaChallenge");
 const bananaQuestion = document.getElementById("bananaQuestion");
 const bananaAnswer = document.getElementById("bananaAnswer");
@@ -21,7 +18,6 @@ const submitBanana = document.getElementById("submitBanana");
 const bananaMessage = document.getElementById("bananaMessage");
 
 // Load game images
->>>>>>> Stashed changes
 const roadImage = new Image();
 roadImage.src = "assets/road.png";
 
@@ -36,6 +32,8 @@ const lanePositions = [40, 160, 280];
 
 // Game status variables
 let isRunning = false;
+let isChallenging = false;
+
 let carLane = 1;
 let carPositionX = lanePositions[carLane];
 
@@ -49,14 +47,6 @@ let score = 0;
 let frame = 0;
 let animationId = null;
 
-<<<<<<< Updated upstream
-// Load the saved best score
-let bestScore = Number(localStorage.getItem("carDodgeBest")) || 0;
-bestText.textContent = bestScore;
-
-
-// Check that all images have loaded
-=======
 // Banana challenge variables
 let bananaSolution = null;
 const bonusPoints = 50;
@@ -67,21 +57,18 @@ let bestScore = Number(localStorage.getItem("carDodgeBest")) || 0;
 bestText.textContent = bestScore;
 
 // Check whether all game images have loaded
->>>>>>> Stashed changes
 function imagesReady() {
     return (
-        roadImage.complete && roadImage.naturalWidth > 0 &&
-        playerCarImage.complete && playerCarImage.naturalWidth > 0 &&
-        enemyCarImage.complete && enemyCarImage.naturalWidth > 0
+        roadImage.complete &&
+        roadImage.naturalWidth > 0 &&
+        playerCarImage.complete &&
+        playerCarImage.naturalWidth > 0 &&
+        enemyCarImage.complete &&
+        enemyCarImage.naturalWidth > 0
     );
 }
 
-<<<<<<< Updated upstream
-
-// Draw the road image
-=======
 // Draw the road background
->>>>>>> Stashed changes
 function drawRoad() {
     ctx.drawImage(
         roadImage,
@@ -92,12 +79,7 @@ function drawRoad() {
     );
 }
 
-<<<<<<< Updated upstream
-
-// Draw the player's car image
-=======
 // Draw the player's car
->>>>>>> Stashed changes
 function drawCar() {
     ctx.drawImage(
         playerCarImage,
@@ -108,12 +90,7 @@ function drawCar() {
     );
 }
 
-<<<<<<< Updated upstream
-
-// Create an obstacle in a random lane
-=======
 // Create a new obstacle in a random lane
->>>>>>> Stashed changes
 function createObstacle() {
     const lane = Math.floor(Math.random() * 3);
 
@@ -125,12 +102,7 @@ function createObstacle() {
     });
 }
 
-<<<<<<< Updated upstream
-
-// Draw enemy car images
-=======
 // Draw all enemy cars
->>>>>>> Stashed changes
 function drawObstacles() {
     for (const obstacle of obstacles) {
         ctx.drawImage(
@@ -143,12 +115,7 @@ function drawObstacles() {
     }
 }
 
-<<<<<<< Updated upstream
-
-// Check if two cars collide
-=======
 // Check whether the player's car hits an obstacle
->>>>>>> Stashed changes
 function checkCollision(car, obstacle) {
     return (
         car.x < obstacle.x + obstacle.width &&
@@ -158,12 +125,7 @@ function checkCollision(car, obstacle) {
     );
 }
 
-<<<<<<< Updated upstream
-
-// Draw the complete game
-=======
 // Draw all game objects on the canvas
->>>>>>> Stashed changes
 function drawGame() {
     if (!imagesReady()) return;
 
@@ -172,10 +134,6 @@ function drawGame() {
     drawCar();
 }
 
-<<<<<<< Updated upstream
-
-// Update the game
-=======
 // Get a new math puzzle from the Banana API
 async function loadBananaChallenge() {
     isRunning = false;
@@ -295,54 +253,33 @@ function checkBananaAnswer() {
 }
 
 // Main game loop
->>>>>>> Stashed changes
 function updateGame() {
     if (!isRunning) return;
 
     frame++;
 
-<<<<<<< Updated upstream
-    // Create an enemy every 60 frames
-=======
     // Create a new obstacle every 60 frames
->>>>>>> Stashed changes
     if (frame % 60 === 0) {
         createObstacle();
     }
 
-<<<<<<< Updated upstream
-    // Move enemies down
-=======
     // Move obstacles down the road
->>>>>>> Stashed changes
     for (const obstacle of obstacles) {
         obstacle.y += 4;
     }
 
-<<<<<<< Updated upstream
-    // Remove enemies that leave the screen
-=======
     // Remove obstacles that have left the screen
->>>>>>> Stashed changes
     obstacles = obstacles.filter(
         obstacle => obstacle.y < canvas.height
     );
 
-<<<<<<< Updated upstream
-    // Increase score
-=======
     // Increase the score as the player survives
->>>>>>> Stashed changes
     if (frame % 10 === 0) {
         score++;
         scoreText.textContent = score;
     }
 
-<<<<<<< Updated upstream
-    // Player's collision area
-=======
     // Get the player's current position
->>>>>>> Stashed changes
     const player = {
         x: carPositionX,
         y: carPositionY,
@@ -350,12 +287,6 @@ function updateGame() {
         height: carHeight
     };
 
-<<<<<<< Updated upstream
-    // Check collisions
-    for (const obstacle of obstacles) {
-        if (checkCollision(player, obstacle)) {
-            endGame();
-=======
     // Check for collisions with enemy cars
     for (const obstacle of obstacles) {
         if (checkCollision(player, obstacle)) {
@@ -370,7 +301,6 @@ function updateGame() {
                 endGame();
             }
 
->>>>>>> Stashed changes
             return;
         }
     }
@@ -381,22 +311,12 @@ function updateGame() {
     animationId = requestAnimationFrame(updateGame);
 }
 
-<<<<<<< Updated upstream
-
-// Move the player between the three lanes
-=======
 // Move the player's car between lanes
->>>>>>> Stashed changes
 function moveCar(direction) {
     if (!isRunning) return;
 
     carLane += direction;
 
-<<<<<<< Updated upstream
-    // Stay within the three lanes
-    if (carLane < 0) carLane = 0;
-    if (carLane > 2) carLane = 2;
-=======
     // Keep the car inside the road
     if (carLane < 0) {
         carLane = 0;
@@ -405,29 +325,19 @@ function moveCar(direction) {
     if (carLane > 2) {
         carLane = 2;
     }
->>>>>>> Stashed changes
 
     carPositionX = lanePositions[carLane];
 
     drawGame();
 }
 
-<<<<<<< Updated upstream
-
-// Start or restart the game
-=======
 // Start a new game
->>>>>>> Stashed changes
 function startGame() {
     if (!imagesReady()) {
         message.textContent = "Loading images...";
         instructions.textContent =
-<<<<<<< Updated upstream
-            "Check that all three images exist in the assets folder.";
-=======
             "Please check your assets folder.";
 
->>>>>>> Stashed changes
         overlay.style.display = "flex";
         return;
     }
@@ -438,8 +348,6 @@ function startGame() {
         animationId = null;
     }
 
-<<<<<<< Updated upstream
-=======
     // Reset the Banana challenge
     bananaChallenge.style.display = "none";
     bananaQuestion.src = "";
@@ -451,27 +359,20 @@ function startGame() {
     bonusLevelUsed = false;
 
     // Reset the player's position and score
->>>>>>> Stashed changes
     carLane = 1;
     carPositionX = lanePositions[carLane];
 
     obstacles = [];
     score = 0;
     frame = 0;
-    isRunning = true;
 
     scoreText.textContent = score;
-<<<<<<< Updated upstream
-    message.textContent = "Game Started!";
-    instructions.textContent = "Use ← → or A / D to move.";
-=======
 
     // Update the starting screen
     message.textContent = "Game Started!";
     instructions.textContent =
         "Use ← → or A / D to move.";
 
->>>>>>> Stashed changes
     startButton.textContent = "Play Again";
     overlay.style.display = "none";
 
@@ -481,43 +382,29 @@ function startGame() {
     animationId = requestAnimationFrame(updateGame);
 }
 
-<<<<<<< Updated upstream
-
-// End the game
-=======
 // End the game and save the best score
->>>>>>> Stashed changes
 function endGame() {
     isRunning = false;
+    isChallenging = false;
 
     if (animationId !== null) {
         cancelAnimationFrame(animationId);
         animationId = null;
     }
 
-<<<<<<< Updated upstream
-    if (score > bestScore) {
-        bestScore = score;
-        localStorage.setItem("carDodgeBest", bestScore);
-=======
     // Update the best score if the current score is higher
     if (score > bestScore) {
         bestScore = score;
 
         localStorage.setItem("carDodgeBest", score);
->>>>>>> Stashed changes
         bestText.textContent = bestScore;
     }
 
     // Display the Game Over screen
     message.textContent = "Game Over!";
-<<<<<<< Updated upstream
-    instructions.textContent = "Your score: " + score;
-=======
     instructions.textContent =
         "Your final score: " + score;
 
->>>>>>> Stashed changes
     startButton.textContent = "Play Again";
     overlay.style.display = "flex";
 }
@@ -531,6 +418,7 @@ document.addEventListener("keydown", function(event) {
     if (key === "arrowleft" || key === "a") {
         event.preventDefault();
         moveCar(-1);
+
     } else if (key === "arrowright" || key === "d") {
         event.preventDefault();
         moveCar(1);
@@ -543,36 +431,6 @@ document.getElementById("leftButton")
         moveCar(-1);
     });
 
-<<<<<<< Updated upstream
-// Mobile controls
-document.getElementById("leftButton").addEventListener("click", function() {
-    moveCar(-1);
-});
-
-document.getElementById("rightButton").addEventListener("click", function() {
-    moveCar(1);
-});
-
-
-// Start button
-startButton.addEventListener("click", startGame);
-
-
-// Handle image loading errors
-function handleImageError() {
-    message.textContent = "Image could not be loaded";
-    instructions.textContent =
-        "Check assets/road.png, assets/player-car.png and assets/enemy-car.png.";
-    overlay.style.display = "flex";
-}
-
-roadImage.onerror = handleImageError;
-playerCarImage.onerror = handleImageError;
-enemyCarImage.onerror = handleImageError;
-
-
-// Draw the initial screen when all images are ready
-=======
 document.getElementById("rightButton")
     .addEventListener("click", function() {
         moveCar(1);
@@ -595,7 +453,6 @@ bananaAnswer.addEventListener("keydown", function(event) {
 startButton.addEventListener("click", startGame);
 
 // Count successfully loaded images
->>>>>>> Stashed changes
 let loadedImages = 0;
 
 function handleImageLoad() {
@@ -620,3 +477,7 @@ function handleImageError() {
 roadImage.onload = handleImageLoad;
 playerCarImage.onload = handleImageLoad;
 enemyCarImage.onload = handleImageLoad;
+
+roadImage.onerror = handleImageError;
+playerCarImage.onerror = handleImageError;
+enemyCarImage.onerror = handleImageError;

@@ -8,34 +8,73 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <main class="game-container">
-        <h1><span id="icone">🏎️</span> Car Dodge</h1>
-        <p class="subtitle">Avoid the traffic and beat your high score!</p>
 
+    <main class="game-container">
+
+        <header class="game-header">
+            <h1>
+                <span id="icone">🏎️</span>
+                Car Dodge
+            </h1>
+            <p class="subtitle">
+                Avoid the traffic and beat your high score!
+            </p>
+        </header>
+
+        <!-- Score Board -->
         <div class="score-board">
             <div>Score: <span id="score">0</span></div>
             <div>Best: <span id="best">0</span></div>
         </div>
 
+        <!-- Game Area -->
         <div class="game-area">
             <canvas id="gameCanvas" width="360" height="540"></canvas>
 
+<!-- Start / Game Over Overlay -->
             <div id="overlay" class="overlay">
                 <h2 id="message">Ready to Drive?</h2>
-                <p id="instructions">Use ← → or A / D to move.</p>
+                <p id="instructions">
+                    Use ← → or A / D to move.
+                </p>
                 <button id="startButton">Start Game</button>
             </div>
+
         </div>
 
-        <p class="controls">Keyboard: ← → or A / D</p>
-        <p class="mobile-hint">On a phone? Use the buttons below.</p>
+        <!-- Banana Bonus Challenge -->
+        <div id="bananaChallenge" class="banana-challenge"
+             style="display: none;">
 
+            <h2>Bonus Level</h2>
+
+            <img id="bananaQuestion"
+                 src=""
+                 alt="Banana math puzzle">
+
+            <div class="banana-answer-area">
+                <input
+                    type="number"
+                    id="bananaAnswer"
+                    placeholder="Enter your answer"
+                >
+
+                <button id="submitBanana">Enter</button>
+            </div>
+
+            <p id="bananaMessage"></p>
+
+        </div>
+
+        <!-- Mobile Controls -->
         <div class="mobile-controls">
             <button id="leftButton">◀ Left</button>
             <button id="rightButton">Right ▶</button>
         </div>
+
     </main>
 
     <script src="game.js"></script>
+
 </body>
 </html>

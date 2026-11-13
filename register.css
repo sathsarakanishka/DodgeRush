@@ -1,0 +1,146 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+
+    background-image: url("assets/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    font-family: Arial, sans-serif;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px 0;
+}
+
+.register-container {
+    width: 90%;
+    max-width: 400px;
+
+    text-align: center;
+    color: white;
+}
+
+header {
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 30px;
+    text-shadow: 2px 2px 5px black;
+}
+
+header p {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+.register-box {
+    padding: 28px 25px;
+
+    background: rgba(15, 23, 42, 0.93);
+
+    border: 2px solid #38bdf8;
+    border-radius: 10px;
+
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+
+    text-align: left;
+}
+
+.register-box h2 {
+    text-align: center;
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.description {
+    text-align: center;
+    color: #cbd5e1;
+    font-size: 13px;
+    margin-bottom: 22px;
+}
+
+.register-box label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 13px;
+    color: white;
+}
+
+.register-box input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+
+    border: 1px solid #94a3b8;
+    border-radius: 5px;
+
+    font-size: 14px;
+    outline: none;
+}
+
+.register-box input:focus {
+    border-color: #38bdf8;
+}
+
+.register-box button {
+    width: 100%;
+    padding: 12px;
+
+    border: none;
+    border-radius: 5px;
+
+    background: #ffbd00;
+    color: #172554;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.register-box button:hover {
+    background: #ffda55;
+}
+
+.register-box button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+.login-link a {
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#registerMessage {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+footer {
+    margin-top: 20px;
+    color: #cbd5e1;
+    font-size: 11px;
+}

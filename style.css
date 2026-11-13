@@ -1,7 +1,9 @@
-body{
+body {
     background-image: url("assets/bg.png");
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 .game-container {
@@ -10,11 +12,12 @@ body{
     margin: 0 auto;
 }
 
-h1{
+h1 {
     color: white;
     text-align: center;
     font-family: Arial, sans-serif;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
     text-decoration: underline;
     text-decoration-color: yellow;
     text-decoration-thickness: 2px;
@@ -121,9 +124,98 @@ button:active {
     margin-bottom: 8px;
 }
 
+.banana-challenge {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 15px;
+    padding: 20px;
+
+    box-sizing: border-box;
+    text-align: center;
+
+    color: white;
+
+    /* Keep the original dark overlay */
+    background: rgb(15 23 42 / 85%);
+}
+
+.banana-challenge h2 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+/* Bigger Banana API puzzle image */
+.banana-challenge img {
+    width: 800px;
+    max-width: 95%;
+    max-height: auto;
+    margin-bottom: 10px;
+
+    object-fit: contain;
+
+    background: white;
+    border-radius: 5px;
+}
+
+/* Answer input and button */
+.banana-answer-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.banana-challenge input {
+    width: 160px;
+    padding: 12px;
+
+    border-radius: 8px;
+    border: none;
+
+    font-size: 16px;
+    text-align: center;
+}
+
+.banana-challenge button {
+    padding: 12px 18px;
+}
+
+#bananaMessage {
+    font-size: 26px;
+    color: white;
+}
+
 @media (min-width: 600px) {
     .mobile-hint,
     .mobile-controls {
         display: none;
+    }
+}
+
+@media (max-width: 400px) {
+
+    .banana-challenge {
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .banana-challenge img {
+        width: 95%;
+        max-height: 150px;
+    }
+
+    .banana-challenge h2 {
+        font-size: 20px;
+    }
+
+    .banana-challenge input {
+        width: 135px;
     }
 }
