@@ -12,12 +12,15 @@ app.use(express.json());
 // Authentication routes
 app.use("/api/auth", require("./routes/auth"));
 
+// Leaderboard routes
+app.use("/api/leaderboard", require("./routes/leaderboard"));
+
 // Test route
 app.get("/", (req, res) => {
     res.send("Car Dodge API is running!");
 });
 
-// Connect MongoDB
+// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log("MongoDB connected successfully!");
