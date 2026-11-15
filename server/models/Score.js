@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 const mongoose = require("mongoose");
 
 const scoreSchema = new mongoose.Schema({
@@ -24,8 +20,4 @@ const scoreSchema = new mongoose.Schema({
     timestamps: true
 });
 
-<<<<<<< Updated upstream
 module.exports = mongoose.model("Score", scoreSchema);
-=======
-module.exports = mongoose.model("Score", scoreSchema);
->>>>>>> Stashed changes
