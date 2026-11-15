@@ -1,0 +1,144 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Arial, sans-serif;
+
+    background-image: url("assets/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+
+    color: white;
+}
+
+.leaderboard-container {
+    width: 100%;
+    max-width: 650px;
+    padding: 25px;
+
+    background: rgb(15 23 42 / 95%);
+
+    border: 2px solid #38bdf8;
+    border-radius: 15px;
+
+    box-shadow: 0 0 20px rgb(56 189 248 / 25%);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+header h1 {
+    margin-bottom: 8px;
+    color: #38bdf8;
+}
+
+header p {
+    color: #cbd5e1;
+}
+
+.player-info {
+    padding: 15px;
+    margin-bottom: 25px;
+
+    background: #1e293b;
+    border-radius: 10px;
+}
+
+.player-info h2 {
+    margin-top: 0;
+    color: #facc15;
+}
+
+.player-info p {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.leaderboard-section h2 {
+    text-align: center;
+    color: #facc15;
+}
+
+#leaderboardMessage {
+    text-align: center;
+    color: #cbd5e1;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th,
+td {
+    padding: 13px 10px;
+    text-align: center;
+    border-bottom: 1px solid #475569;
+}
+
+th {
+    background: #0369a1;
+    color: white;
+}
+
+tbody tr {
+    background: #1e293b;
+}
+
+tbody tr.current-player {
+    background: #164e63;
+    font-weight: bold;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+button {
+    padding: 12px 22px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #38bdf8;
+    color: #0f172a;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+button:hover {
+    background: #7dd3fc;
+}
+
+@media (max-width: 450px) {
+    .leaderboard-container {
+        padding: 15px;
+    }
+
+    th,
+    td {
+        padding: 10px 5px;
+        font-size: 14px;
+    }
+}
