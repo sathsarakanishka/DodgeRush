@@ -23,40 +23,55 @@
 
         <!-- Score Board -->
         <div class="score-board">
-            <div>Score: <span id="score">0</span></div>
-            <div>Best: <span id="best">0</span></div>
+            <div>
+                Score: <span id="score">0</span>
+            </div>
+            <div>
+                Best: <span id="best">0</span>
+            </div>
         </div>
 
         <!-- Game Area -->
         <div class="game-area">
             <canvas id="gameCanvas" width="360" height="540"></canvas>
-
-<!-- Start / Game Over Overlay -->
             <div id="overlay" class="overlay">
                 <h2 id="message">Ready to Drive?</h2>
                 <p id="instructions">
                     Use ← → or A / D to move.
                 </p>
-                <button id="startButton">Start Game</button>
+
+                <button id="startButton">
+                    Start Game
+                </button>
+
             </div>
 
         </div>
 
         <!-- Banana Bonus Challenge -->
-        <div id="bananaChallenge" class="banana-challenge"
-             style="display: none;">
+        <div
+            id="bananaChallenge"
+            class="banana-challenge"
+            style="display: none;"
+        >
 
             <h2>Bonus Level</h2>
 
-            <img id="bananaQuestion"
-                 src=""
-                 alt="Banana math puzzle">
+            <!-- Countdown Timer -->
+            <p class="banana-timer">
+                Time remaining:
+                <span id="bananaTimer">15</span>s
+            </p>
 
+            <!-- Banana Puzzle -->
+            <img id="bananaQuestion" src="" alt="Banana math puzzle">
             <div class="banana-answer-area">
                 <input
                     type="number"
                     id="bananaAnswer"
                     placeholder="Enter your answer"
+                    min="0"
+                    max="10"
                 >
 
                 <button id="submitBanana">Enter</button>
@@ -73,8 +88,7 @@
         </div>
 
     </main>
-
-    <script src="game.js"></script>
+    <script type="module" src="js/game.js"></script>
 
 </body>
 </html>
