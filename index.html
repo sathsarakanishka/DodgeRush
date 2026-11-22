@@ -7,10 +7,9 @@
     <title>Car Dodge - Arcade Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-
     <main class="game-container">
-
         <header class="game-header">
             <h1>
                 <span id="icone">🏎️</span>
@@ -23,60 +22,83 @@
 
         <!-- Score Board -->
         <div class="score-board">
-            <div>Score: <span id="score">0</span></div>
-            <div>Best: <span id="best">0</span></div>
+            <div>
+                Score: <span id="score">0</span>
+            </div>
+            <div>
+                Best: <span id="best">0</span>
+            </div>
         </div>
 
         <!-- Game Area -->
         <div class="game-area">
-            <canvas id="gameCanvas" width="360" height="540"></canvas>
+            <canvas
+                id="gameCanvas"
+                width="360"
+                height="540">
+            </canvas>
 
-<!-- Start / Game Over Overlay -->
+            <!-- Start / Game Over Overlay -->
             <div id="overlay" class="overlay">
                 <h2 id="message">Ready to Drive?</h2>
                 <p id="instructions">
                     Use ← → or A / D to move.
                 </p>
-                <button id="startButton">Start Game</button>
+                <button id="startButton">
+                    Start Game
+                </button>
             </div>
-
         </div>
 
         <!-- Banana Bonus Challenge -->
-        <div id="bananaChallenge" class="banana-challenge"
-             style="display: none;">
-
+        <div
+            id="bananaChallenge"
+            class="banana-challenge"
+            style="display: none;"
+        >
             <h2>Bonus Level</h2>
 
-            <img id="bananaQuestion"
-                 src=""
-                 alt="Banana math puzzle">
+            <!-- Countdown Timer -->
+            <p class="banana-timer">
+                Time remaining:
+                <span id="bananaTimer">15</span>s
+            </p>
 
+            <!-- Banana Puzzle -->
+            <img
+                id="bananaQuestion"
+                src=""
+                alt="Banana math puzzle"
+            >
+
+            <!-- Answer Area -->
             <div class="banana-answer-area">
                 <input
                     type="number"
                     id="bananaAnswer"
                     placeholder="Enter your answer"
-                    max="10"
                     min="0"
+                    max="10"
                 >
-
-                <button id="submitBanana">Enter</button>
+                <button id="submitBanana">
+                    Enter
+                </button>
             </div>
-
             <p id="bananaMessage"></p>
-
         </div>
-
+      
         <!-- Mobile Controls -->
         <div class="mobile-controls">
-            <button id="leftButton">◀ Left</button>
-            <button id="rightButton">Right ▶</button>
+            <button id="leftButton">
+                ◀ Left
+            </button>
+            <button id="rightButton">
+                Right ▶
+            </button>
         </div>
-
     </main>
 
-    <script src="game.js"></script>
-
+    <!-- Main JavaScript Module -->
+    <script type="module" src="js/game.js"></script>
 </body>
 </html>
