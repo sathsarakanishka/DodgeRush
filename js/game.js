@@ -210,6 +210,7 @@ async function loadBananaChallenge() {
         }
 
         bananaSolution = Number(data.solution);
+        console.log("Banana puzzle solution:", bananaSolution);
 
         bananaQuestion.onload = function () {
             bananaQuestion.style.display = "block";
@@ -316,7 +317,7 @@ function checkBananaAnswer() {
 
         // Show an incorrect answer message
         bananaMessage.textContent =
-            "Wrong answer! Game Over!";
+            "Wrong answer! Game Over!!!";
     }
 
     // Prevent another answer from being submitted
@@ -333,7 +334,6 @@ function checkBananaAnswer() {
 
     }, 3000);
 }
-
 
 // Update the game
 function updateGame() {
