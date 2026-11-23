@@ -1,66 +1,103 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Dodge - Register</title>
+
+    <title>DodgeRush - Register</title>
+
     <link rel="stylesheet" href="register.css">
 </head>
+
 <body>
+
     <main class="register-container">
+
         <header>
-            <h1>🏎️ Car Dodge</h1>
+            <h1>🏎️ DodgeRush</h1>
             <p>Create your driver account</p>
         </header>
+
         <section class="register-box">
+
             <h2>Create Account</h2>
-            <p class="description">Join the Car Dodge challenge!</p>
+
+            <p class="description">
+                Join the DodgeRush challenge!
+            </p>
+
             <form id="registerForm">
+
                 <label for="username">Username</label>
+
                 <input
                     type="text"
                     id="username"
                     placeholder="Enter your username"
                     minlength="3"
+                    maxlength="20"
                     required
                 >
+
                 <label for="email">Email Address</label>
+
                 <input
                     type="email"
                     id="email"
                     placeholder="Enter your email"
                     required
                 >
+
                 <label for="password">Password</label>
+
                 <input
                     type="password"
                     id="password"
-                    placeholder="Minimum 8 characters"
+                    placeholder="Create a strong password"
                     minlength="8"
+                    autocomplete="new-password"
                     required
                 >
+
+                <small class="password-hint">
+                    Minimum 8 characters, one uppercase letter
+                    and one special symbol.
+                </small>
+
                 <label for="confirmPassword">Confirm Password</label>
+
                 <input
                     type="password"
                     id="confirmPassword"
                     placeholder="Confirm your password"
+                    autocomplete="new-password"
                     required
                 >
+
                 <button type="submit" id="registerButton">
                     CREATE ACCOUNT
                 </button>
+
                 <p id="registerMessage"></p>
+
             </form>
+
             <p class="login-link">
                 Already have an account?
                 <a href="login.html">Login</a>
-           </p>
+            </p>
+
         </section>
+
         <footer>
-            Car Dodge Arcade Game
+            DodgeRush Arcade Game
         </footer>
+
     </main>
+
     <script src="register.js"></script>
+
 </body>
 </html>
