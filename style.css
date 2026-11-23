@@ -192,6 +192,20 @@ button:active {
     color: white;
 }
 
+/* Bonus level countdown */
+.banana-timer {
+    font-size: 18px;
+    font-weight: bold;
+    color: #e68911;
+    margin: 10px 0;
+}
+
+/* Disabled Banana answer button */
+#submitBanana:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 @media (min-width: 600px) {
     .mobile-hint,
     .mobile-controls {
