@@ -6,7 +6,6 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-
 // Get the logged-in user from the JWT token
 async function getLoggedInUser(req) {
     const authorization = req.headers.authorization;
@@ -24,7 +23,6 @@ async function getLoggedInUser(req) {
 
     return await User.findById(decoded.userId);
 }
-
 
 // Submit or update the player's best score
 router.post("/submit", async (req, res) => {
@@ -57,7 +55,7 @@ router.post("/submit", async (req, res) => {
                 }
             },
             {
-                new: true,
+                returnDocument: "after",
                 upsert: true,
                 runValidators: true
             }
@@ -76,7 +74,6 @@ router.post("/submit", async (req, res) => {
         });
     }
 });
-
 
 // Get the logged-in player's best score
 router.get("/best", async (req, res) => {
@@ -105,7 +102,6 @@ router.get("/best", async (req, res) => {
         });
     }
 });
-
 
 // Get the top 10 players
 router.get("/top", async (req, res) => {
