@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Car Dodge - Leaderboard</title>
+
+    <link rel="stylesheet" href="leaderboard.css">
+</head>
+<body>
+
+    <main class="leaderboard-container">
+
+        <header>
+            <h1>🏆 Leaderboard</h1>
+            <p>Car Dodge Top Players</p>
+        </header>
+
+        <section class="player-info">
+            <h2>Your Result</h2>
+
+            <p>
+                Player:
+                <span id="playerName">Guest</span>
+            </p>
+
+            <p>
+                Your Score:
+                <span id="playerScore">0</span>
+            </p>
+        </section>
+
+        <section class="leaderboard-section">
+
+            <h2>Top 10 Players</h2>
+
+            <p id="leaderboardMessage">
+                Loading leaderboard...
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+
+                <tbody id="leaderboardBody">
+                </tbody>
+            </table>
+
+        </section>
+
+        <div class="buttons">
+            <button id="playAgainButton">
+                Play Again
+            </button>
+
+            <button id="loginButton">
+                Login
+            </button>
+        </div>
+
+    </main>
+
+    <script src="leaderboard.js"></script>
+
+</body>
+</html>
