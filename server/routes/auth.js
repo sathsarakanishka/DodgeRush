@@ -8,7 +8,12 @@ const Score = require("../models/Score");
 
 const router = express.Router();
 
-// Create a JWT token for a user
+// Check password strength
+function isStrongPassword(password) {
+    return /^(?=.*[A-Z])(?=.*[^A-Za-z0-9\s]).{8,}$/.test(password);
+}
+
+// Create a JWT token
 function createToken(user) {
     return jwt.sign(
         { userId: user._id },
@@ -17,7 +22,7 @@ function createToken(user) {
     );
 }
 
-// Return safe user details without the password
+// Return safe user information
 function publicUser(user) {
     return {
         id: user._id,
@@ -26,7 +31,7 @@ function publicUser(user) {
     };
 }
 
-// Check the user's login token
+// Authenticate the user using JWT
 async function authenticateToken(req, res, next) {
     try {
         const authorization = req.headers.authorization;
@@ -57,7 +62,7 @@ async function authenticateToken(req, res, next) {
 
     } catch (error) {
         return res.status(401).json({
-            message: "Invalid or expired login session. Please log in again."
+            message: "Invalid or expired session. Please log in again."
         });
     }
 }
@@ -87,9 +92,9 @@ router.post("/register", async (req, res) => {
             });
         }
 
-        if (password.length < 8) {
+        if (!isStrongPassword(password)) {
             return res.status(400).json({
-                message: "Password must be at least 8 characters."
+                message: "Password must be at least 8 characters and contain one uppercase letter and one special symbol."
             });
         }
 
@@ -224,14 +229,14 @@ router.patch("/profile", authenticateToken, async (req, res) => {
 
         await req.user.save();
 
-        // Keep the leaderboard username in sync
+        // Update the player's leaderboard username
         await Score.updateOne(
             { user: req.user._id },
             { $set: { username } }
         );
 
         res.json({
-            message: "Profile updated successfully.",
+            message: "Profile updated successfully!",
             user: publicUser(req.user)
         });
 
@@ -262,12 +267,14 @@ router.patch("/change-password", authenticateToken, async (req, res) => {
             });
         }
 
-        if (newPassword.length < 8) {
+        // Check new password strength
+        if (!isStrongPassword(newPassword)) {
             return res.status(400).json({
-                message: "New password must be at least 8 characters."
+                message: "New password must be at least 8 characters and contain one uppercase letter and one special symbol."
             });
         }
 
+        // Verify current password
         const isMatch = await bcrypt.compare(
             currentPassword,
             req.user.password
@@ -279,6 +286,7 @@ router.patch("/change-password", authenticateToken, async (req, res) => {
             });
         }
 
+        // Prevent reusing the same password
         const samePassword = await bcrypt.compare(
             newPassword,
             req.user.password
